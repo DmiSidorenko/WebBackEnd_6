@@ -103,18 +103,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])){
     <select name="select_user">
       <option selected disabled value ="0">Выбрать пользователя</option>
       <?php
-      for($index =1 ;$index <= $countofusers;$index++){
+      for($index =1 ;$index <= $countofusers; $index++){
         $stmt = $db->prepare("SELECT * FROM humans WHERE id = ?");
         $stmt -> execute([$index]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if($user['id'] == $index){
-            print("Пользователь с ID:". $user['id'] . "и именем: " . $user['name']);
+            print("<option value =" . $index . ">" . "Пользователь с ID ". $user['id'] . " и именем " . $user['name'] . "</option>");
         }
       }
       ?>
     </select><br>
     <input name="delete" type="submit" value="Удаление" />
     <input name="editing" type="submit" value="Редактирование" />
+    </br>
   </form>
 
   <?php
@@ -125,7 +126,7 @@ if(isset($_POST['editing']) && $_SERVER['REQUEST_METHOD'] == 'POST'){
     $user_id = (int) $_POST['select_user'];
     setcookie('user_id', $user_id);
     $values = array();
-    $stmt = $db->prepare("SELECT * FROM human WHERE id = ?");
+    $stmt = $db->prepare("SELECT * FROM humans WHERE id = ?");
     $stmt -> execute([$user_id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $values['name'] = strip_tags($row['name']);
